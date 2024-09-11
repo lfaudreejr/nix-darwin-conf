@@ -18,7 +18,10 @@
 
   outputs = { self, nix-darwin, home-manager, nix-nvim, ... }:
   let
-    configuration = { pkgs, ... }: {
+    configuration = { pkgs, lib, ... }: {
+      nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+        "ngrok"
+      ];
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
@@ -31,6 +34,14 @@
           pkgs.eza
           pkgs.fzf
           pkgs.curl
+          pkgs.duf
+          pkgs.glances
+          pkgs.gnused
+          pkgs.tldr
+          pkgs.scc
+          pkgs.dua
+          pkgs.lazygit
+          pkgs.ngrok
         ];
 
       # Auto upgrade nix package and the daemon service.
@@ -78,7 +89,7 @@
       };
 
       imports = [
-        ./system-packages/home.nix
+        ./home-packages/home.nix
       ];
     };
   in
