@@ -3,15 +3,20 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-nvim = {
+      url = "github:lfaudreejr/nvim-nix";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }:
+  outputs = { self, nix-darwin, home-manager, nix-nvim, ... }:
   let
     configuration = { pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
@@ -57,15 +62,15 @@
 
       users.users."larryfaudree".home = "/Users/larryfaudree";
     };
-    homeconfig = { pkgs, ... }: {
+    homeconfig = { ... }: {
       # this is for internale home-manager configurability
       # don't touch
       home.stateVersion = "23.05";
       # let's home-manager configure itself
       programs.home-manager.enable = true;
 
-      home.packages = with pkgs; [
-        kitty
+      home.packages = [
+        nix-nvim.packages."x86_64-darwin".nvim
       ];
 
       home.sessionVariables = {
