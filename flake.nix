@@ -19,6 +19,7 @@
   outputs = { self, nix-darwin, home-manager, nix-nvim, ... }:
   let
     configuration = { pkgs, lib, ... }: {
+      nix.settings.trusted-users = [ "root" "larryfaudree" ];
       nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
         "ngrok"
       ];
