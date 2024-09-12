@@ -8,7 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-nvim = {
-      url = "github:lfaudreejr/nvim-nix";
+      url = "github:lfaudreejr/nix-darwin-nvim";
     };
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -16,8 +16,9 @@
     };
   };
 
-  outputs = { self, nix-darwin, home-manager, nix-nvim, ... }:
+  outputs = { self, nixpkgs, nix-darwin, home-manager, nix-nvim, ... }:
   let
+    system = "x86_64-darwin";
     configuration = { pkgs, lib, ... }: {
       nix.settings.trusted-users = [ "root" "larryfaudree" ];
       nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
@@ -65,7 +66,7 @@
       system.stateVersion = 4;
 
       # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "x86_64-darwin";
+      nixpkgs.hostPlatform = "${system}";
 
       security.pam.enableSudoTouchIdAuth = true;
 
@@ -83,7 +84,7 @@
       programs.home-manager.enable = true;
 
       home.packages = [
-        nix-nvim.packages."x86_64-darwin".nvim
+        nix-nvim.packages."${system}".nvim
       ];
 
       home.sessionVariables = {
@@ -112,6 +113,6 @@
     };
 
     # Expose the package set, including overlays, for convenience.
-    darwinPackages = self.darwinConfigurations."Larrys-MacBook-Pro".pkgs; 
+    darwinPackages = self.darwinConfigurations."Larrys-MacBook-Pro".pkgs;  
   };
 }
