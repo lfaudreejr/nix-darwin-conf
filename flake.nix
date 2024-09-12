@@ -42,6 +42,7 @@
           pkgs.dua
           pkgs.lazygit
           pkgs.ngrok
+          pkgs.devenv
         ];
 
       # Auto upgrade nix package and the daemon service.
